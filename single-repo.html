@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="./assets/css/style.css" />
-  <title>Git it Done</title>
+  <title>Open Issues - Github Issue Fetcher</title>
 </head>
 
 <body class="flex-column min-100-vh">
@@ -23,8 +23,21 @@
   
   <main>
   
+    <div id="issues-container" class="list-group">
+
+    </div>
+
+    <!-- displays content if there is more than 30 issues, letting the user
+    know that there are issues that are not displaying due to api limitations,
+    and they can click to view the full repo issue page on github.
+    -->
+    <div id="limit-warning">
+
+    </div>
+
   </main>
 
+  <script src="./assets/js/single.js"></script>
 </body>
 
 </html>
