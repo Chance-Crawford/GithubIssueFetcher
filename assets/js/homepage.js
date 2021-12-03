@@ -116,6 +116,7 @@ function displayRepos(repos, searchTerm) {
     }
 
     // loop through each repo object
+    // dynamically creating HTML elements from the GitHub API response
     for (var i = 0; i < repos.length; i++) {
 
         // get the current repo object's owner login property.
@@ -125,8 +126,12 @@ function displayRepos(repos, searchTerm) {
         var repoName = repos[i].owner.login + "/" + repos[i].name;
     
         // create a container div element for the current repo
-        var repoEl = document.createElement("div");
+        var repoEl = document.createElement("a");
         repoEl.classList = "list-item flex-row justify-space-between align-center";
+        // ? used to pass a query parameter to the other html page when
+        // the element is clicked.
+        // see google docs server side apis - notes, query parameters
+        repoEl.setAttribute("href", "./single-repo.html?repo=" + repoName);
     
         // create a span element to hold username/repository name
         var titleEl = document.createElement("span");

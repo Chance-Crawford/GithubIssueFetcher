@@ -1,4 +1,6 @@
 
+// script for single-repo.html page
+
 // selects the container on the page that displays the issues
 // in the repo
 var issueContainerEl = document.querySelector("#issues-container");
@@ -7,6 +9,9 @@ var issueContainerEl = document.querySelector("#issues-container");
 // has more than 30 issues, telling the user that they will not all be
 // displayed.
 var limitWarningEl = document.querySelector("#limit-warning");
+
+// selects span element in the header that will display the repo name
+var repoNameEl = document.querySelector("#repo-name");
 
 
 // displays warning at bottom of the page which links the user to the orriginal
@@ -28,6 +33,33 @@ function displayWarning(repo) {
 }
 
 
+// gets the repo name that needs to be displayed on the page from the 
+// query parameter.
+function getRepoName() {
+
+    // see google docs server side APIs, query parameters.
+    // returns query parameter string.
+    var queryString = document.location.search;
+
+    // split the query parameter string at the = sign.
+    // then get the second element which will be the value we need.
+    var repoName = queryString.split("=")[1];
+    
+    // error checking.
+    // if no repo was given, redirect to the homepage.
+    if(!repoName){
+        document.location.replace("./index.html");
+    }
+
+    // pass to function that fetches the issue data
+    // from the designated repository.
+    getRepoIssues(repoName);
+
+    // display repo name in the header span
+    repoNameEl.textContent = repoName;
+}
+
+
 // uses github api to get individual issue data
 // within a repo
 function getRepoIssues(repo) {
@@ -35,6 +67,9 @@ function getRepoIssues(repo) {
     // allows you to get info about the issues within a specific repo
     // this link we also give you data on the pull requests in the repo as well,
     // but thats ok, cus both the issues and pull request will be used and displayed.
+
+    // the words after the question mark is the query parameter we are passing
+    // to make the list returned from gitghub go in ascending order
     var apiUrl = "https://api.github.com/repos/" + repo + "/issues?direction=asc";
 
     // fetch the promise response by using the api link
@@ -67,7 +102,14 @@ function getRepoIssues(repo) {
             });
         }
         else {
-            alert("There was a problem with your request!");
+            // if response from the issue endpoint is invalid,
+            // return to the homepage.
+            // To check if this redirect is working, update the URL in 
+            // your browser's address bar from index.html to something like: 
+            // single-repo.html?repo=nope. There is no "nope" repository 
+            // on GitHub, which will cause a bad response when fetched, and thus 
+            // trigger the redirect.
+            document.location.replace("./index.html");
         }
     });
 
@@ -129,4 +171,4 @@ function displayIssues(issues) {
 
 
 // events
-getRepoIssues("facebook/react");
+getRepoName();
