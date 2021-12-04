@@ -20,7 +20,7 @@ var repoNameEl = document.querySelector("#repo-name");
 function displayWarning(repo) {
 
     // add text to warning container
-    limitWarningEl.textContent = "To see more than 30 issues, visit: ";
+    limitWarningEl.textContent = "To see more than 50 issues, visit: ";
 
     // create <a> linking to the repos github issues page
     var linkEl = document.createElement("a");
@@ -70,7 +70,7 @@ function getRepoIssues(repo) {
 
     // the words after the question mark is the query parameter we are passing
     // to make the list returned from gitghub go in ascending order
-    var apiUrl = "https://api.github.com/repos/" + repo + "/issues?direction=asc";
+    var apiUrl = "https://api.github.com/repos/" + repo + "/issues?direction=asc&per_page=50";
 
     // fetch the promise response by using the api link
     fetch(apiUrl)
