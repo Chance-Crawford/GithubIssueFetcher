@@ -18,6 +18,28 @@ var repoSearchTerm = document.querySelector("#repo-search-term");
 // selects the div that holds the javascript, html, and css buttons.
 var languageButtonsEl = document.querySelector("#language-buttons")
 
+
+
+// if the user hit the "go back" button from single-repo.html.
+// this function will repopulate the page with the users repos if there
+// is a query parameter in the url.
+function repopulatePage() {
+    
+    if(document.location.search){
+        var reloadedUser = document.location.search.split("=")[1];
+
+        console.log("ran. there is a query parameter");
+
+        getUserRepos(reloadedUser);
+    }
+    else{
+        console.log("No current user");
+    }
+    
+}
+
+
+
 // handles what happens after user submits username in input
 function formSubmitHandler(event) {
     // stops browser from refreshing, and it prevents the browser from 
@@ -43,6 +65,7 @@ function formSubmitHandler(event) {
 
 
 function getUserRepos(user) {
+
     // fetches the data of all the users repos
     // in the form of a JSON objects, holding and array
     // of objects. each object is a repo from the user
@@ -104,7 +127,15 @@ function getUserRepos(user) {
 // (in the form of an array of objects), and the term they searched 
 // for as parameters (username).
 function displayRepos(repos, searchTerm) {
-    
+
+    // changes url, takes away query parameter from url without refreshing the page
+    // this is useful for when a user went to single-repo.html and hit the "go back"
+    // button. we previously have used a query parameter to reload the repos of the 
+    // user when the goback button was hit and the index.html page was loaded.
+    // but once we display the repos, we are essentially taking the query 
+    // parameter out of the url.
+    window.history.pushState('', '', '/index.html');
+
     // clear old content from list on right, and update search name at top of the list.
     repoContainerEl.textContent = "";
     repoSearchTerm.textContent = searchTerm;
@@ -163,6 +194,7 @@ function displayRepos(repos, searchTerm) {
         // append container to the DOM
         // so it shows on the screen.
         repoContainerEl.appendChild(repoEl);
+
     }
 
 }
@@ -231,6 +263,7 @@ function getFeaturedRepos(language) {
 
 
 //events
+repopulatePage();
 
 // when a submit event ocurs on the form element, run the function
 // formSubmitHandler

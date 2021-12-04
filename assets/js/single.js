@@ -13,6 +13,22 @@ var limitWarningEl = document.querySelector("#limit-warning");
 // selects span element in the header that will display the repo name
 var repoNameEl = document.querySelector("#repo-name");
 
+// selects go back button
+var goBackButton = document.querySelector("#btn-back");
+
+
+// function that makes queryparameter to repopulate the the 
+// repos on the homepage after the button is clicked.
+function goBack() {
+    // gets the name of the owner of the repo
+    var userName = document.location.search.split("=")[1].split("/")[0];
+
+    document.location.replace("./index.html?username=" + userName);
+}
+
+// when go back button is clicked
+goBackButton.addEventListener("click", goBack);
+
 
 // displays warning at bottom of the page which links the user to the orriginal
 // repo page if the repo has over 30 issues. So that the user can see all of
