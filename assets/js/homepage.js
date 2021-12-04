@@ -15,7 +15,8 @@ var repoContainerEl = document.querySelector("#repos-container");
 // the top of the list.
 var repoSearchTerm = document.querySelector("#repo-search-term");
 
-
+// selects the div that holds the javascript, html, and css buttons.
+var languageButtonsEl = document.querySelector("#language-buttons")
 
 // handles what happens after user submits username in input
 function formSubmitHandler(event) {
@@ -166,6 +167,65 @@ function displayRepos(repos, searchTerm) {
 
 }
 
+
+// gets which element was clicked inside the div by accessing
+// the event object
+function buttonClickHandler(event) {
+
+    // the browser's event object will have a target property that 
+    // tells us exactly which HTML element was interacted within the 
+    // div to create the event. Once we know which element we interacted 
+    // with, we can use the getAttribute() method to read the data-language 
+    // attribute's value assigned to the element.
+    var language = event.target.getAttribute("data-language");
+    
+    // check to make sure language does not come back empty
+    if (language) {
+        // Make sure to include repoContainerEl.textContent = "" to clear out 
+        // any remaining text from the repo container. Even though this line 
+        // comes after getFeaturedRepos(), it will always execute first, because 
+        // getFeaturedRepos() is asynchronous and will take longer to get a 
+        // response from GitHub's API.
+        getFeaturedRepos(language);
+      
+        // clear old content
+        repoContainerEl.textContent = "";
+    }
+}
+
+
+// event delegation.
+// when the div that holds the javascript, html, and css buttons is clicked.
+// run button click handler function above.
+languageButtonsEl.addEventListener("click", buttonClickHandler);
+
+// gets the featured repos of a particular language from github 
+// whenever a user clicks on the language button they desire.
+function getFeaturedRepos(language) {
+
+    // see google docs, server side APIs qualifiers
+    // gets repos with a selected language and adds a qualifier to see
+    // if the repos are featured. Then adds another query parameter to 
+    // sort the repositories by help wanted issues.
+    // return repos from github, make sure they are this language AND
+    // that they are featured. Then sort them and give me the response. 
+    var apiUrl = "https://api.github.com/search/repositories?q=" + language + "+is:featured&sort=help-wanted-issues";
+
+    fetch(apiUrl)
+    .then(function(response) {
+        if(response.ok){
+            // parses response.json() promise into an actual object
+            response.json().then(function(data) {
+                // sends to function that displays the repos to the
+                // page
+                displayRepos(data.items, language);
+            });
+        }
+        else {
+            alert("Error: GitHub user not found");
+        }
+    });
+}
 
 
 
